@@ -15,6 +15,7 @@ namespace Front\Controller;
 use Front\Front;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Thelia\Controller\Front\BaseFrontController;
 use Thelia\Core\Event\Customer\CustomerCreateOrUpdateEvent;
@@ -442,13 +443,7 @@ class CustomerController extends BaseFrontController
                     }
 
                     return $this->generateSuccessRedirect($customerLoginForm);
-                } catch (UsernameNotFoundException $e) {
-                    $message = $this->getTranslator()->trans(
-                        'Wrong email or password. Please try again',
-                        [],
-                        Front::MESSAGE_DOMAIN
-                    );
-                } catch (WrongPasswordException $e) {
+                } catch (UsernameNotFoundException|UserNotFoundException|WrongPasswordException $e) {
                     $message = $this->getTranslator()->trans(
                         'Wrong email or password. Please try again',
                         [],
